@@ -12,7 +12,7 @@ router
   .route("/store/:id/ratings")
   .get(verifyJWT, StoreRating)
   .post(verifyJWT, rateStore)
-  .put(verifyJWT, alterRating);
+router.route("/stores/:id/edit-rating").post(verifyJWT, alterRating);
 router.route("/stores/search").get(verifyJWT, searchStore);
 router.route("/stores").get(verifyJWT, getStores);
 

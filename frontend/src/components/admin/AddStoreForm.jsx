@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-function AddUserForm() {
+function AddStoreForm() {
   const [form, setForm] = useState({
     name: '',
     email: '',
     address: '',
-    password: '',
-    role: 'Normal', // default role to match backend
+    owner_id: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -15,18 +14,17 @@ function AddUserForm() {
   const validate = () => {
     const errs = {};
     if (form.name.length < 20 || form.name.length > 60) {
-      errs.name = 'Name must be 20 to 60 characters.';
+      errs.name = 'Store name must be 20 to 60 characters.';
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
-      errs.email = 'Invalid email.';
+      errs.email = 'Invalid email format.';
     }
     if (form.address.length > 400) {
       errs.address = 'Address can be max 400 characters.';
     }
-    const passRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,16}$/;
-    if (!passRegex.test(form.password)) {
-      errs.password = 'Password must be 8–16 characters, include 1 uppercase & 1 special character.';
+    if (!form.owner_id || isNaN(form.owner_id)) {
+      errs.owner_id = 'Owner ID must be a valid number.';
     }
     return errs;
   };
@@ -41,29 +39,29 @@ function AddUserForm() {
       const payload = {
         name: form.name,
         email: form.email,
-        password: form.password,
         address: form.address,
-        role: form.role // Already in correct format: "Normal", "Admin", "StoreOwner"
+        owner_id: form.owner_id
       };
 
-      await axios.post('http://localhost:8000/api/v1/admin/add-user', payload, {
-        withCredentials: true // ✅ use cookies for auth
+      await axios.post('http://localhost:8000/api/v1/admin/add-store', payload, {
+        withCredentials: true
       });
 
-      alert('User added!');
-      setForm({ name: '', email: '', address: '', password: '', role: 'Normal' });
+      alert('Store added successfully!');
+      setForm({ name: '', email: '', address: '', owner_id: '' });
     } catch (err) {
-      alert('Failed to add user.');
+      alert('Failed to add store.');
       console.error(err.response?.data || err.message);
     }
   };
 
   return (
     <div className="bg-white p-4 shadow rounded">
-      <h2 className="text-lg font-semibold mb-2">Add New User</h2>
+      <h2 className="text-lg font-semibold mb-2">Add New Store</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
-          placeholder="Name"
+          type="text"
+          placeholder="Store Name"
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
         />
@@ -85,26 +83,17 @@ function AddUserForm() {
         {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
 
         <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={e => setForm({ ...form, password: e.target.value })}
+          type="number"
+          placeholder="Owner ID"
+          value={form.owner_id}
+          onChange={e => setForm({ ...form, owner_id: e.target.value })}
         />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        {errors.owner_id && <p className="text-red-500 text-sm">{errors.owner_id}</p>}
 
-        <select
-          value={form.role}
-          onChange={e => setForm({ ...form, role: e.target.value })}
-        >
-          <option value="Normal">Normal User</option>
-          <option value="Admin">Admin</option>
-          <option value="StoreOwner">Store Owner</option>
-        </select>
-
-        <button type="submit" className="bg-green-500 text-white py-1 rounded">Add User</button>
+        <button type="submit" className="bg-indigo-500 text-white py-1 rounded">Add Store</button>
       </form>
     </div>
   );
 }
 
-export default AddUserForm;
+export default AddStoreForm;

@@ -1,26 +1,23 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import AppRoutes from './routes/AppRoutes';
-import Navbar from './components/common/Navbar';
-import Sidebar from './components/common/Sidebar';
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import AdminDashboard from './pages/AdminDashboard';
+import UserDashboard from './pages/UserDashboard';
+import StoreOwnerDashboard from './pages/StoreOwnerDashboard';
+import StoreRatingPage from './pages/StoreRatingPage';
 
-const App = () => {
+function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <div className="flex">
-          <SidebarWrapper />
-          <main className="flex-1 min-h-screen bg-gray-50">
-            <Navbar />
-            <div className="p-6">
-              <AppRoutes />
-            </div>
-          </main>
-        </div>
-      </AuthProvider>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/user" element={<UserDashboard />} />
+      <Route path="/user/store/:id/rating" element={<StoreRatingPage />} />
+      <Route path="/owner" element={<StoreOwnerDashboard />} />
+    </Routes>
   );
-};
+}
 
 export default App;

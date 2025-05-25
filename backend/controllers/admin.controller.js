@@ -52,7 +52,6 @@ const addUserAndAdmin = async (req, res) => {
     address.length > 400 ||
     password.length < 8 ||
     password.length > 16 ||
-    role == "StoreOwner" ||
     !validateEmail(email)
   ) {
     return res.status(400).json({ message: "Enter Valid Information" });
@@ -65,7 +64,6 @@ const addUserAndAdmin = async (req, res) => {
 
 const addStore = async (req, res) => {
   const { role } = req.user;
-
   if (role !== "Admin") {
     return res.status(402).json({ message: "Unauthorized Access" });
   }
@@ -73,9 +71,8 @@ const addStore = async (req, res) => {
   const { name, email, address, owner_id } = req.body;
 
   if (
-    [name, email, address, owner_id].some((field) => {
-      field?.trim() == "";
-    }) ||
+    [name, email, address].some(field => !field || field.trim() === "") ||
+    !owner_id ||
     name.length < 20 ||
     name.length > 60 ||
     address.length > 400 ||
@@ -84,10 +81,15 @@ const addStore = async (req, res) => {
     return res.status(400).json({ message: "Enter Valid Information" });
   }
 
-  const result = await addStores(req.body);
+  const result = await addStores({ name, email, address, owner_id });
 
-  res.status(200).json({ message: "Store Created" });
+  if (!result) {
+    return res.status(400).json({ message: "Owner must be a valid StoreOwner" });
+  }
+
+  return res.status(200).json(result);
 };
+
 
 
 const getAllUsers = async (req, res) => {

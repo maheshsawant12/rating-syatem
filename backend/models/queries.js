@@ -47,11 +47,26 @@ const getStoreRating = async (storeId) => {
 };
 
 const getStoresAllRatings = async (storeId) => {
-  const { rows } = await db.query("select * from ratings where store_id = $1", [
-    storeId,
-  ]);
+  const { rows } = await db.query(
+    `
+    SELECT 
+      r.id,
+      r.user_id,
+      u.name AS user_name,
+      r.store_id,
+      r.rating,
+      r.created_at
+    FROM ratings r
+    JOIN users u ON r.user_id = u.id
+    WHERE r.store_id = $1
+    ORDER BY r.created_at DESC;
+    `,
+    [storeId]
+  );
+
   return rows;
 };
+
 
 const insertRefreshToken = async (id, token) => {
   console.log(`User ID: ${id}`);
@@ -119,21 +134,50 @@ const adminDashboard = async () => {
 };
 
 const addStores = async ({ name, email, address, owner_id }) => {
-  const { rows } = await db.query(
-    "insert into stores (name, email, address, owner_id) values ($1, $2, $3, $4);",
+  const userResult = await db.query(
+    "SELECT role FROM users WHERE id = $1;",
+    [owner_id]
+  );
+
+  if (userResult.rows.length === 0 || userResult.rows[0].role !== 'StoreOwner') {
+    return null;
+  }
+
+  const insertResult = await db.query(
+    "INSERT INTO stores (name, email, address, owner_id) VALUES ($1, $2, $3, $4) RETURNING *;",
     [name, email, address, owner_id]
   );
 
-  return rows;
+  return insertResult.rows;
 };
+
 
 const getAllUser = async () => {
-  const { rows } = await db.query(
-    "select name, email, address, role from users"
-  );
+  const { rows } = await db.query(`
+    SELECT 
+      u.id, 
+      u.name, 
+      u.email, 
+      u.address, 
+      u.role,
+      CASE 
+        WHEN u.role = 'StoreOwner' THEN COALESCE(sr.avg_rating, 0)
+        ELSE NULL
+      END AS rating
+    FROM users u
+    LEFT JOIN (
+      SELECT 
+        s.owner_id, 
+        ROUND(AVG(r.rating), 2) AS avg_rating
+      FROM stores s
+      JOIN ratings r ON r.store_id = s.id
+      GROUP BY s.owner_id
+    ) sr ON u.id = sr.owner_id;
+  `);
 
   return rows;
 };
+
 
 const getuserDetail = async () => {
   const { rows } = await db.query(

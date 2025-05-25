@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function AddUserForm() {
+function Signup() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: '',
     email: '',
     address: '',
-    password: '',
-    role: 'Normal', // default role to match backend
+    password: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -24,9 +25,9 @@ function AddUserForm() {
     if (form.address.length > 400) {
       errs.address = 'Address can be max 400 characters.';
     }
-    const passRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,16}$/;
-    if (!passRegex.test(form.password)) {
-      errs.password = 'Password must be 8–16 characters, include 1 uppercase & 1 special character.';
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,16}$/;
+    if (!passwordRegex.test(form.password)) {
+      errs.password = 'Password must be 8–16 chars, 1 uppercase, 1 special character.';
     }
     return errs;
   };
@@ -38,31 +39,20 @@ function AddUserForm() {
     if (Object.keys(errs).length > 0) return;
 
     try {
-      const payload = {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        address: form.address,
-        role: form.role // Already in correct format: "Normal", "Admin", "StoreOwner"
-      };
-
-      await axios.post('http://localhost:8000/api/v1/admin/add-user', payload, {
-        withCredentials: true // ✅ use cookies for auth
-      });
-
-      alert('User added!');
-      setForm({ name: '', email: '', address: '', password: '', role: 'Normal' });
-    } catch (err) {
-      alert('Failed to add user.');
-      console.error(err.response?.data || err.message);
+      await axios.post('http://localhost:5000/api/auth/signup', form);
+      alert('Signup successful. Please login.');
+      navigate('/');
+    } catch (error) {
+      alert('Signup failed. Try again.');
     }
   };
 
   return (
-    <div className="bg-white p-4 shadow rounded">
-      <h2 className="text-lg font-semibold mb-2">Add New User</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <div className="max-w-md mx-auto p-4">
+      <h2 className="text-2xl mb-4">User Signup</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
+          type="text"
           placeholder="Name"
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
@@ -92,19 +82,10 @@ function AddUserForm() {
         />
         {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
 
-        <select
-          value={form.role}
-          onChange={e => setForm({ ...form, role: e.target.value })}
-        >
-          <option value="Normal">Normal User</option>
-          <option value="Admin">Admin</option>
-          <option value="StoreOwner">Store Owner</option>
-        </select>
-
-        <button type="submit" className="bg-green-500 text-white py-1 rounded">Add User</button>
+        <button type="submit" className="bg-blue-500 text-white py-2 mt-2">Signup</button>
       </form>
     </div>
   );
 }
 
-export default AddUserForm;
+export default Signup;
