@@ -1,0 +1,13 @@
+Admin Login -
+email - admin@test.com
+password - Admin@123
+
+
+Store Owner Login -
+email - onkar@test.com
+password - Omkar@123
+
+
+User Login -
+email - abhay@test.com
+password - User@123
