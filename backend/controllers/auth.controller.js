@@ -73,7 +73,6 @@ const registerUser = async (req, res) => {
     }
 
     res.status(200).send("User Created");
-    console.log(result);
   } catch (err) {
     console.log(err);
     res.status(500).send("⚠️ Server Error!");
@@ -124,36 +123,35 @@ const loginUser = async (req, res) => {
       .status(200)
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
-      .send("User Logged In");
+      .json({ id: user.id, role: user.role});
   } catch (err) {
     console.log(err);
   }
 };
 
 const changePassword = async (req, res) => {
-  const { email } = req.body;
+  const { password } = req.body;
+
   try {
-    if (!validateEmail(email)) {
-      return res.status(401).send("Invalid Email!");
+    const id = req.user.id;
+
+    if (!password) {
+      return res.status(400).send("Password is required.");
     }
 
-    const result = await getUser(email);
+    const updatedUser = await updatePassword({ id, password });
 
-    if (result.length === 0) {
-      return res.status(401).send("User Not Found!");
-    }
-
-    const updatedPassword = await updatePassword(req.body);
-
-    if (updatedPassword.length === 0) {
-      return res.status(500).send("password not Changed!");
+    if (updatedUser.length === 0) {
+      return res.status(500).send("Password not changed!");
     }
 
     res.status(202).send("Password Changed");
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const refreshAccessToken = async () => {
   const refreshToken = req.cookies?.refreshToken;

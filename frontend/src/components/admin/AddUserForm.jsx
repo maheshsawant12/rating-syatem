@@ -7,7 +7,7 @@ function AddUserForm() {
     email: '',
     address: '',
     password: '',
-    role: 'Normal', // default role to match backend
+    role: 'Normal', 
   });
 
   const [errors, setErrors] = useState({});
@@ -43,11 +43,11 @@ function AddUserForm() {
         email: form.email,
         password: form.password,
         address: form.address,
-        role: form.role // Already in correct format: "Normal", "Admin", "StoreOwner"
+        role: form.role 
       };
 
       await axios.post('http://localhost:8000/api/v1/admin/add-user', payload, {
-        withCredentials: true // ✅ use cookies for auth
+        withCredentials: true
       });
 
       alert('User added!');
@@ -59,51 +59,80 @@ function AddUserForm() {
   };
 
   return (
-    <div className="bg-white p-4 shadow rounded">
-      <h2 className="text-lg font-semibold mb-2">Add New User</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <input
-          placeholder="Name"
-          value={form.name}
-          onChange={e => setForm({ ...form, name: e.target.value })}
-        />
-        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={e => setForm({ ...form, email: e.target.value })}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-        <textarea
-          placeholder="Address"
-          value={form.address}
-          onChange={e => setForm({ ...form, address: e.target.value })}
-        />
-        {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={e => setForm({ ...form, password: e.target.value })}
-        />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-
-        <select
-          value={form.role}
-          onChange={e => setForm({ ...form, role: e.target.value })}
-        >
-          <option value="Normal">Normal User</option>
-          <option value="Admin">Admin</option>
-          <option value="StoreOwner">Store Owner</option>
-        </select>
-
-        <button type="submit" className="bg-green-500 text-white py-1 rounded">Add User</button>
-      </form>
+    <div className="bg-white p-6 rounded-xl shadow-md">
+  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div>
+      <input
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Name"
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+      />
+      {errors.name && (
+        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+      )}
     </div>
+
+    <div>
+      <input
+        type="email"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Email"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+      />
+      {errors.email && (
+        <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+      )}
+    </div>
+
+    <div>
+      <textarea
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+        placeholder="Address"
+        value={form.address}
+        onChange={(e) => setForm({ ...form, address: e.target.value })}
+        rows="3"
+      />
+      {errors.address && (
+        <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+      )}
+    </div>
+
+    <div>
+      <input
+        type="password"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Password"
+        value={form.password}
+        onChange={(e) => setForm({ ...form, password: e.target.value })}
+      />
+      {errors.password && (
+        <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+      )}
+    </div>
+
+    <div>
+      <select
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+        value={form.role}
+        onChange={(e) => setForm({ ...form, role: e.target.value })}
+      >
+        <option value="Normal">Normal User</option>
+        <option value="Admin">Admin</option>
+        <option value="StoreOwner">Store Owner</option>
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg shadow transition"
+    >
+      Add User
+    </button>
+  </form>
+</div>
+
   );
 }
 

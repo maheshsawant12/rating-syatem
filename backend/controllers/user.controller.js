@@ -49,7 +49,6 @@ const rateStore = async (req, res) => {
   }
 
   const { rating } = req.body;
-  console.log(rating)
   const storeId = req.params.id;
 
   await addRating(id, storeId, rating);

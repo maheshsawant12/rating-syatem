@@ -28,20 +28,26 @@ function StoreList() {
   );
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search by name or address"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border p-1 mb-4 w-full"
-      />
-      <div className="grid gap-4">
-        {filteredStores.map(store => (
-          <StoreCard key={store.id} store={store} />
-        ))}
-      </div>
-    </div>
+    <div className="mt-6">
+  <input
+    type="text"
+    placeholder="Search by name or address"
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
+  />
+
+  <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    {filteredStores.length > 0 ? (
+      filteredStores.map((store) => (
+        <StoreCard key={store.id} store={store} />
+      ))
+    ) : (
+      <p className="text-gray-500 text-sm">No stores match your search.</p>
+    )}
+  </div>
+</div>
+
   );
 }
 

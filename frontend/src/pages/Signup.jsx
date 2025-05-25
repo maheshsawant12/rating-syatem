@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Signup() {
   const navigate = useNavigate();
@@ -8,7 +8,8 @@ function Signup() {
     name: '',
     email: '',
     address: '',
-    password: ''
+    password: '',
+    role: 'Normal'
   });
 
   const [errors, setErrors] = useState({});
@@ -39,7 +40,9 @@ function Signup() {
     if (Object.keys(errs).length > 0) return;
 
     try {
-      await axios.post('http://localhost:5000/api/auth/signup', form);
+      await axios.post('http://localhost:8000/api/v1/auth/register', form, {
+        withCredentials: true
+      });
       alert('Signup successful. Please login.');
       navigate('/');
     } catch (error) {
@@ -48,42 +51,71 @@ function Signup() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h2 className="text-2xl mb-4">User Signup</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <input
-          type="text"
-          placeholder="Name"
-          value={form.name}
-          onChange={e => setForm({ ...form, name: e.target.value })}
-        />
-        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+    <div className="max-w-md mx-auto mt-16 bg-white shadow-md rounded-xl p-6 space-y-4">
+      <h2 className="text-2xl font-bold text-center text-gray-800">Create Account</h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={e => setForm({ ...form, email: e.target.value })}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="text-sm font-medium text-gray-700 block">Full Name</label>
+          <input
+            type="text"
+            placeholder="Your full name"
+            value={form.name}
+            onChange={e => setForm({ ...form, name: e.target.value })}
+            className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        </div>
 
-        <textarea
-          placeholder="Address"
-          value={form.address}
-          onChange={e => setForm({ ...form, address: e.target.value })}
-        />
-        {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+        <div>
+          <label className="text-sm font-medium text-gray-700 block">Email</label>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={e => setForm({ ...form, email: e.target.value })}
+            className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={e => setForm({ ...form, password: e.target.value })}
-        />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        <div>
+          <label className="text-sm font-medium text-gray-700 block">Address</label>
+          <textarea
+            placeholder="Your full address"
+            value={form.address}
+            onChange={e => setForm({ ...form, address: e.target.value })}
+            className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+        </div>
 
-        <button type="submit" className="bg-blue-500 text-white py-2 mt-2">Signup</button>
+        <div>
+          <label className="text-sm font-medium text-gray-700 block">Password</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={form.password}
+            onChange={e => setForm({ ...form, password: e.target.value })}
+            className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+        >
+          Sign Up
+        </button>
       </form>
+
+      <p className="text-sm text-center text-gray-600">
+        Already have an account?{' '}
+        <Link to="/" className="text-blue-600 hover:underline font-medium">
+          Login here
+        </Link>
+      </p>
     </div>
   );
 }

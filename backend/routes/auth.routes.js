@@ -6,7 +6,7 @@ const router = Router();
 
 router.route("/register").post(registerUser)
 router.route("/login").post(loginUser)
-router.route("/update-password").post(changePassword)
+router.route("/update-password").post(verifyJWT, changePassword)
 router.route("/logout").post(verifyJWT, logout)
 
 export default router

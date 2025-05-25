@@ -56,43 +56,69 @@ function AddStoreForm() {
   };
 
   return (
-    <div className="bg-white p-4 shadow rounded">
-      <h2 className="text-lg font-semibold mb-2">Add New Store</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <input
-          type="text"
-          placeholder="Store Name"
-          value={form.name}
-          onChange={e => setForm({ ...form, name: e.target.value })}
-        />
-        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={e => setForm({ ...form, email: e.target.value })}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-        <textarea
-          placeholder="Address"
-          value={form.address}
-          onChange={e => setForm({ ...form, address: e.target.value })}
-        />
-        {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
-
-        <input
-          type="number"
-          placeholder="Owner ID"
-          value={form.owner_id}
-          onChange={e => setForm({ ...form, owner_id: e.target.value })}
-        />
-        {errors.owner_id && <p className="text-red-500 text-sm">{errors.owner_id}</p>}
-
-        <button type="submit" className="bg-indigo-500 text-white py-1 rounded">Add Store</button>
-      </form>
+   <div className="bg-white p-6 rounded-xl shadow-md">
+  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div>
+      <input
+        type="text"
+        placeholder="Store Name"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+      />
+      {errors.name && (
+        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+      )}
     </div>
+
+    <div>
+      <input
+        type="email"
+        placeholder="Email"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+      />
+      {errors.email && (
+        <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+      )}
+    </div>
+
+    <div>
+      <textarea
+        placeholder="Address"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
+        rows="3"
+        value={form.address}
+        onChange={(e) => setForm({ ...form, address: e.target.value })}
+      />
+      {errors.address && (
+        <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+      )}
+    </div>
+
+    <div>
+      <input
+        type="number"
+        placeholder="Owner ID"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        value={form.owner_id}
+        onChange={(e) => setForm({ ...form, owner_id: e.target.value })}
+      />
+      {errors.owner_id && (
+        <p className="text-red-500 text-sm mt-1">{errors.owner_id}</p>
+      )}
+    </div>
+
+    <button
+      type="submit"
+      className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 rounded-lg shadow transition"
+    >
+      Add Store
+    </button>
+  </form>
+</div>
+
   );
 }
 

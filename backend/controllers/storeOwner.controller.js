@@ -12,6 +12,4 @@ const getRatings = async (req, res) => {
   res.status(200).json(ratings);
 };
 
-const getAverageRatings = async (req, res) => {};
-
-export { getRatings, getAverageRatings };
+export { getRatings };

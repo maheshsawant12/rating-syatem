@@ -26,12 +26,12 @@ const addUser = async ({ name, email, address, password, role }) => {
   return rows;
 };
 
-const updatePassword = async ({ email, password }) => {
+const updatePassword = async ({ id, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const { rows } = await db.query(
-    "update users set password = $1 where email = $2 RETURNING *",
-    [hashedPassword, email]
+    "UPDATE users SET password = $1 WHERE id = $2 RETURNING *",
+    [hashedPassword, id]
   );
 
   return rows;
@@ -69,8 +69,6 @@ const getStoresAllRatings = async (storeId) => {
 
 
 const insertRefreshToken = async (id, token) => {
-  console.log(`User ID: ${id}`);
-  console.log(`Token: ${token}`);
   const { rows } = await db.query("select * from users where id = $1 limit 1", [
     id,
   ]);
