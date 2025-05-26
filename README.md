@@ -26,10 +26,9 @@ A full-stack web application that enables users to rate and review stores. The s
 
 ### Frontend
 - **Framework**: React.js
-- **State Management**: Context API
 - **Routing**: React Router
 - **HTTP Client**: Axios
-- **Styling**: CSS Modules / Styled Components
+- **Styling**: Tailwindcss
 
 ### Backend
 - **Runtime**: Node.js
